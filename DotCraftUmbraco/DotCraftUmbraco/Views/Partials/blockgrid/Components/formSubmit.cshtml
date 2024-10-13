@@ -1,0 +1,33 @@
+﻿@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+
+@* Checking for Cookie to determin if the user has already submited  *@
+@if (Context.Request.Cookies["FormSubmitted"] != null &&
+   Context.Request.Cookies["FormSubmitted"] == "true")
+{
+    <div style="color: green;">Thank you for submitting!</div>
+    <p>Your submission has been received.</p>
+    <button disabled="disabled">Submit</button>
+}
+else
+{
+    @* If page is valid then create the form layout with Name, DOB and Email *@
+
+    //TODO: ADD BETTER STYLING
+    <form method="post" action="/umbraco/surface/FormSubmit/SubmitForm">
+        @Html.AntiForgeryToken()
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+        </div>
+        <div>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+}
