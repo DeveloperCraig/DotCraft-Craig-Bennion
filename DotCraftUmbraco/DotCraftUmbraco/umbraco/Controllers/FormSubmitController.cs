@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Logging;
 using Umbraco.Cms.Core.Routing;
@@ -28,22 +30,27 @@ namespace Umbraco.Controllers
         {
             try
             {
-                // Getting Connect Ready for TextFile
-                string content = $"Name: {name}\nDate of Birth: {dob:yyyy-MM-dd}\nEmail: {email}";
+                string pattern = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
-                // Getting FilePath & Saving
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", $"{name}_Details.txt");
-                System.IO.File.WriteAllText(filePath, content);
-
-                // Set a cookie to indicate successful submission (Maybe Remove this depending if it needs to stop multiple submitions)
-                Response.Cookies.Append("FormSubmitted", "true", new CookieOptions
+                if (Regex.IsMatch(email, pattern) && !name.IsNullOrEmpty())
                 {
-                    Expires = DateTimeOffset.UtcNow.AddDays(1),
-                    HttpOnly = true,
-                    Secure = true
-                });
+                    // Getting Connect Ready for TextFile
+                    string content = $"Name: {name}\nDate of Birth: {dob:yyyy-MM-dd}\nEmail: {email}";
 
-                TempData["Success"] = "Form submitted successfully!";
+                    // Getting FilePath & Saving
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", $"{name}_Details.txt");
+                    System.IO.File.WriteAllText(filePath, content);
+
+                    // Set a cookie to indicate successful submission (Maybe Remove this depending if it needs to stop multiple submitions)
+                    Response.Cookies.Append("FormSubmitted", "true", new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddDays(1),
+                        HttpOnly = true,
+                        Secure = true
+                    });
+
+                    TempData["Success"] = "Form submitted successfully!";
+                }
             }
             catch (Exception)
             {
