@@ -2,7 +2,8 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.HomePage>
 @using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
 @{
-	Layout = null;
+	Layout = "Master.cshtml";
+	var logo = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("logo");
 }
 <!DOCTYPE HTML>
 <html>
@@ -10,48 +11,29 @@
 		<title>@Model.Value("title", fallback: Fallback.ToAncestors)</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="/css/main.css" />
 	</head>
 	
 	<body>
 
-		<!-- Navigation -->
-		<div class="container">
-			<nav class="navbar navbar-expand navbar-light">
-				<a class="navbar-brand font-weight-bold" href="/">DotCraft Demo</a>
-				<!-- Links -->
-				<ul class="navbar-nav">
-					
-				</ul>
-			</nav>
-		</div>
+    <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        @if (Model.HasValue("logo"))
+        {
+            <img class="bi me-2" width="40" height="32" src="@logo.Url()" alt="Logo" />   
+        }
+        
+        <span class="fs-4">@Model.Value("title", fallback: Fallback.ToAncestors)</span>
+      </a>
+    </header>
+  </div>
 		
 		<!-- Jumbotron -- BootStrap -->
 		<div class="jumbotron text-center jumbotron-fluid">
 			<div class="container">
 				<h1 class="display-1">@Model.Value("title", fallback: Fallback.ToAncestors)</h1>
 			</div>
-		</div>
-
-		<!-- This is where we're going to render our content -->
-		
-		<div class="container">
-
-			<div class="row section">
-				<div class="col-md-12">
-
-					<h2>Why Umbraco is a great fit for you as a developer</h2>
-					<p>Are you looking for a CMS that’ll give you full flexibility? 
-						A CMS that doesn’t get in the way of things but instead lets you unfold your talent, ideas and creations in order to build websites that’ll impress - or simply just work as intended. 
-						All while keeping your editor, boss or client happy? Then look no further. 
-						With Umbraco, you get a clean slate Open Source ASP.NET CMS so you can <span class="font-weight-bold">build and extend your website exactly the way you need to.</span></p>
-					<p>We’ve got over 225,000 active developers in our worldwide Umbraco community, who have already embraced the powers and joys of using a flexible CMS.</p>
-
-				</div>				
-			</div>
-
 		</div>
 		
 		<!-- Render the Block Grid  -->
@@ -71,7 +53,7 @@
 	
 	<!-- Scripts -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> *@
 	
 	</body>
 </html>

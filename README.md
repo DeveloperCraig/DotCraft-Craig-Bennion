@@ -1,3 +1,14 @@
+Requirements to Run:
+.NET8.0
+
+Account information:
+Login for Umbraco: 
+Email: Admin@Admin.com
+Password: Gv:v*d+kS[
+
+
+-----------------------------------------
+
 Umbraco Technical Test
 
 -----------------------------------------
