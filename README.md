@@ -1,3 +1,11 @@
+Requirements to Run:
+.NET8.0
+Account information:
+
+
+
+-----------------------------------------
+
 Umbraco Technical Test
 
 -----------------------------------------

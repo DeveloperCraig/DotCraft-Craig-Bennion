@@ -5,31 +5,35 @@
 }
 @* Checking for Cookie to determin if the user has already submited  *@
 @if (Context.Request.Cookies["FormSubmitted"] != null &&
-   Context.Request.Cookies["FormSubmitted"] == "true")
+  Context.Request.Cookies["FormSubmitted"] == "true")
 {
-    <div style="color: green;">Thank you for submitting!</div>
-    <p>Your submission has been received.</p>
-    <button disabled="disabled">Submit</button>
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Thank you for submitting!</h4>
+        <p>Your submission has been received.</p>
+    </div>
+
 }
 else
 {
     @* If page is valid then create the form layout with Name, DOB and Email *@
 
-    //TODO: ADD BETTER STYLING
-    <form method="post" action="/umbraco/surface/FormSubmit/SubmitForm">
+    <form method="post" action="/umbraco/surface/FormSubmit/SubmitForm" class="container mt-4 p-4 border rounded">
+        @*In Future This H1 Really should be customizable from the CMS*@
+        <h1>Please Fill in this form and your details will be saved.</h1>
         @Html.AntiForgeryToken()
-        <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required />
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" required />
         </div>
-        <div>
-            <label for="dob">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" required />
+        <div class="mb-3">
+            <label for="dob" class="form-label">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" class="form-control" required />
         </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" pattern="@pattern" title="Please enter a valid email address" required />
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" pattern="@pattern" title="Please enter a valid email address" required />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
 }

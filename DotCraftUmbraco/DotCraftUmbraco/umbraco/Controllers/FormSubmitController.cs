@@ -38,7 +38,7 @@ namespace Umbraco.Controllers
                     string content = $"Name: {name}\nDate of Birth: {dob:yyyy-MM-dd}\nEmail: {email}";
 
                     // Getting FilePath & Saving
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", $"{name}_Details.txt");
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "FormSubmistions", $"{name}_{DateTime.Now.ToString("dd-MM-yyyy")}_Details.txt");
                     System.IO.File.WriteAllText(filePath, content);
 
                     // Set a cookie to indicate successful submission (Maybe Remove this depending if it needs to stop multiple submitions)
