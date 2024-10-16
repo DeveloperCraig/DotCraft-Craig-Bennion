@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DotCraftUmbraco.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Cache;
@@ -26,38 +27,54 @@ namespace Umbraco.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitForm(string name, DateTime dob, string email)
+        public IActionResult SubmitForm(string name, string dob, string email)
         {
             try
             {
-                string pattern = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
-                if (Regex.IsMatch(email, pattern) && !name.IsNullOrEmpty())
+                List<string> errorList = new();
+                // Validation
+                if (!Validation.IsNameValid(name, out string nameError))
                 {
-                    // Getting Connect Ready for TextFile
-                    string content = $"Name: {name}\nDate of Birth: {dob:yyyy-MM-dd}\nEmail: {email}";
-
-                    // Getting FilePath & Saving
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "FormSubmistions", $"{name}_{DateTime.Now.ToString("dd-MM-yyyy")}_Details.txt");
-                    System.IO.File.WriteAllText(filePath, content);
-
-                    // Set a cookie to indicate successful submission (Maybe Remove this depending if it needs to stop multiple submitions)
-                    Response.Cookies.Append("FormSubmitted", "true", new CookieOptions
-                    {
-                        Expires = DateTimeOffset.UtcNow.AddDays(1),
-                        HttpOnly = true,
-                        Secure = true
-                    });
-
-                    TempData["Success"] = "Form submitted successfully!";
+                    errorList.Add(nameError);
                 }
+
+                if (!Validation.IsDobValid(dob, out string dobError, out DateTime userDate))
+                {
+                    errorList.Add(dobError);
+                }
+
+                if (!Validation.IsEmailValid(email, out string emailError))
+                {
+                    errorList.Add(emailError);
+                }
+
+                if (errorList.Count > 0)
+                {
+                    TempData["Error"] = string.Join(Environment.NewLine, errorList);
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+
+
+
+                // All validations passed
+                string content = $"Name: {name}\nDate of Birth: {userDate:dd-MM-yyyy}\nEmail: {email}";
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "FormSubmistions", $"{name}_{DateTime.Now:dd-MM-yyyy}_Details.txt");
+                System.IO.File.WriteAllText(filePath, content);
+
+                Response.Cookies.Append("FormSubmitted", "true", new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(1),
+                    HttpOnly = true,
+                    Secure = true
+                });
+
+                TempData["Success"] = "Form submitted successfully!";
             }
             catch (Exception)
             {
                 TempData["Error"] = "An error occurred while saving the form.";
             }
 
-            // Redirect to the referring page
             return Redirect(Request.Headers["Referer"].ToString());
         }
     }

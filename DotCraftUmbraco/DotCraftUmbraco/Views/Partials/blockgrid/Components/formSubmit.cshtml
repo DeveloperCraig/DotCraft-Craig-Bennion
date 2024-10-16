@@ -5,7 +5,7 @@
 }
 @* Checking for Cookie to determin if the user has already submited  *@
 @if (Context.Request.Cookies["FormSubmitted"] != null &&
-  Context.Request.Cookies["FormSubmitted"] == "true")
+ Context.Request.Cookies["FormSubmitted"] == "true")
 {
     <div class="alert alert-success" role="alert">
         <h4 class="alert-heading">Thank you for submitting!</h4>
@@ -16,6 +16,22 @@
 else
 {
     @* If page is valid then create the form layout with Name, DOB and Email *@
+
+
+    if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Success"]
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Html.Raw(TempData["Error"].ToString().Replace("\r\n", "<br />"))
+        </div>
+    }
+
+
 
     <form method="post" action="/umbraco/surface/FormSubmit/SubmitForm" class="container mt-4 p-4 border rounded">
         @*In Future This H1 Really should be customizable from the CMS*@
